@@ -60,6 +60,7 @@ Write-Host "Authenticating to AAD using: $env:APP_ID"
 $securePassword = $env:APP_SECRET | ConvertTo-SecureString -AsPlainText -Force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$env:APP_ID", $securePassword
 Connect-AzAccount -ServicePrincipal -Credential $credential -TenantId $env:TENANT_ID -ErrorAction Stop
+Set-AzContext -SubscriptionId  $env:SUBSCRIPTION_ID
 
 # run the deployments
 foreach ($item in $deployments.GetEnumerator()) {
