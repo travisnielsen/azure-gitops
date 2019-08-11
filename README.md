@@ -1,6 +1,6 @@
 # GitOps for Azure Infrastructure Lifecycle Automation
 
-This repository describes a proposed workflow for providing automated, self-service deployment of Azure services using first party tools such as Azure DevOps and PowerShell as well as open source test libraries. This workflow is similar to what is commonly referred to as "GitOps". It is intended to illustrate how automation and commonly used collaboration tools such as git can be combined to provide rapid delivery of cloud infrastructure while complying to enterprise security standards.
+This repository describes a proposed workflow for providing automated, self-service deployment of Azure services using first party tools such as Azure DevOps and PowerShell as well as open source test libraries. This workflow is similar to what is commonly referred to as "GitOps". It is intended to illustrate how automation and commonly used collaboration frameworks such as git can be combined to provide rapid delivery of cloud infrastructure while complying to enterprise security standards.
 
 ## Workflow summary
 
