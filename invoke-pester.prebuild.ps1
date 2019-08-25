@@ -113,7 +113,8 @@ Set-AzContext -SubscriptionId  $env:SUBSCRIPTION_ID
 foreach ($item in $paramTemplatePaths.GetEnumerator()) {
 
     $resourceTypes = Get-ResourceTypes(($item.value))
-    $result = Invoke-Pester -Script @{Path=$testScriptPath;Parameters=@{ParamFileLocation=$item.Key;TemplateFileLocation=$item.Value}} -PassThru -TestName $resourceTypes -OutputFile "TestResults.xml" -OutputFormat NUnitXml
+    $testFileName = "tests\" + ($item.value).Split("\")[1].Split(".")[0] + ".xml"
+    $result = Invoke-Pester -Script @{Path=$testScriptPath;Parameters=@{ParamFileLocation=$item.Key;TemplateFileLocation=$item.Value}} -PassThru -TestName $resourceTypes -OutputFile $testFileName -OutputFormat NUnitXml
     
     # TODO: Selective action based on error type (warning, etc...). Send emails
     if ($result.failedCount -ne 0) { 
