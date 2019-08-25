@@ -109,6 +109,9 @@ $credential = New-Object -TypeName System.Management.Automation.PSCredential -Ar
 Connect-AzAccount -ServicePrincipal -Credential $credential -TenantId $env:TENANT_ID -ErrorAction Stop
 Set-AzContext -SubscriptionId  $env:SUBSCRIPTION_ID
 
+# create tests directory
+New-Item -Name "tests" -ItemType "directory"
+
 # Iterate through parameter / template pairs and excute relevant Pester tests
 foreach ($item in $paramTemplatePaths.GetEnumerator()) {
 
