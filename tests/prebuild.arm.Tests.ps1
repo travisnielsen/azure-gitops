@@ -16,7 +16,8 @@ Param(
 # Set file locations and variables
 $rootDir = $MyInvocation.MyCommand.Path | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 $templateFilePath = $rootDir + "\" + $TemplateFileLocation
-
+$paramsFilePath = $rootDir + "\" + $ParamFileLocation
+$paramObj = Get-Content $paramsFilePath | Out-String | ConvertFrom-Json
 $location = $paramObj.parameters.location.value
 $rgName = $paramObj.parameters.resourceGroup.value
 $pesterRG = $rgName + "-Pester-Unit"
