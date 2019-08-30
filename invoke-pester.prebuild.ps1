@@ -23,8 +23,9 @@ $testScriptPath = $currentPath + '\azure-gitops\tests*'
 <#
     This function examines an ARM template file and returns a list of the resource types it deploys
     This list of resources is sent as a parameter to the Invoke-Pester command to tell Pester which tests to run.
+    A second parameter is used for inserting a standard test that is always executed regardless of resource type
 #>
-function Get-ResourceTypes($templatePath) {
+function Get-ResourceTypes($templatePath, $stdTest) {
 
     $resourceTypes = @()
     $templateObj = Get-Content $templatePath | Out-String | ConvertFrom-Json
@@ -34,6 +35,7 @@ function Get-ResourceTypes($templatePath) {
         $resourceTypes += $resource.type
     }
 
+    $resourceTypes += $stdTest
     return $resourceTypes
 }
 
@@ -121,10 +123,9 @@ New-Item -Name "tests" -ItemType "directory"
 # Iterate through parameter / template pairs and excute relevant Pester tests
 foreach ($item in $paramTemplatePaths.GetEnumerator()) {
 
-    $resourceTypes = Get-ResourceTypes(($item.value))
-
-    # add the generic "arm" resource type for test-mode deployment and template syntax validation
-    $resourceTypes += "arm"
+    # get all resource types in the ARM template. Add the standard "arm" resource type
+    # for test-mode deployment and template syntax validation
+    $resourceTypes = Get-ResourceTypes $item.value "arm"
 
     $testFileName = "tests\" + ($item.value).Split("\")[1].Split(".")[0] + ".xml"
     $result = Invoke-Pester -Script @{Path=$testScriptPath;Parameters=@{ParamFileLocation=$item.Key;TemplateFileLocation=$item.Value}} -PassThru -TestName $resourceTypes -OutputFile $testFileName -OutputFormat NUnitXml
