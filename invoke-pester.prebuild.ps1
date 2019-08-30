@@ -1,4 +1,10 @@
 <#
+.SYNOPSIS
+    Extracts input from ARM templates and matching parameter files and executes Pester tests for each resource type.
+    Test result files (nunit xml) are saved to a /test folder in the execution path
+.EXAMPLE
+    invoke-pester.prebuild.ps1 -DeploymentFiles file1.json,file1.params.json,file2.json,file2.params.json 
+.NOTES
     Receives comma-separated list of deployment parameter files and identifies the referenced ARM template
     For each deployment parameter file, the resource types contained in the ARM template is documented and
     a matchign Pester test is launched for it.
@@ -16,7 +22,7 @@ $testScriptPath = $currentPath + '\azure-gitops\tests*'
 
 <#
     This function examines an ARM template file and returns a list of the resource types it deploys
-    This list of resources is sent as a parameter to the Invoke-Pester command to tell Pester which tests to run
+    This list of resources is sent as a parameter to the Invoke-Pester command to tell Pester which tests to run.
 #>
 function Get-ResourceTypes($templatePath) {
 
@@ -116,6 +122,10 @@ New-Item -Name "tests" -ItemType "directory"
 foreach ($item in $paramTemplatePaths.GetEnumerator()) {
 
     $resourceTypes = Get-ResourceTypes(($item.value))
+
+    # add the generic "arm" resource type for test-mode deployment and template syntax validation
+    $resourceTypes += "arm"
+
     $testFileName = "tests\" + ($item.value).Split("\")[1].Split(".")[0] + ".xml"
     $result = Invoke-Pester -Script @{Path=$testScriptPath;Parameters=@{ParamFileLocation=$item.Key;TemplateFileLocation=$item.Value}} -PassThru -TestName $resourceTypes -OutputFile $testFileName -OutputFormat NUnitXml
     
