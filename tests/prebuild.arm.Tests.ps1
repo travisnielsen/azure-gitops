@@ -17,14 +17,14 @@ Param(
 $rootDir = $MyInvocation.MyCommand.Path | Split-Path -Parent | Split-Path -Parent | Split-Path -Parent
 $templateFilePath = $rootDir + "\" + $TemplateFileLocation
 
-$Location = $paramObj.parameters.location.value
-$ResourceGroupName = $paramObj.parameters.resourceGroup.value
-$pesterRG = $ResourceGroupName + "-Pester-Unit"
+$location = $paramObj.parameters.location.value
+$rgName = $paramObj.parameters.resourceGroup.value
+$pesterRG = $rgName + "-Pester-Unit"
 
 Describe "arm" -Tags Unit {
 
     BeforeAll {
-        New-AzResourceGroup -Name $pesterRG -Location $Location
+        New-AzResourceGroup -Name $pesterRG -Location $location
     }
 
    Context "Template Validation" {
@@ -47,6 +47,10 @@ Describe "arm" -Tags Unit {
             $templateProperties | Sort-Object | Should Be $expectedProperties
         }
           
+    }
+
+    Context "Test deployment" {
+
         It "Template and parameter file deploys successfully" {
     
             # Complete mode - will deploy everything in the template from scratch. If the resource group already contains things (or even items that are not in the template) they will be deleted first.
@@ -54,6 +58,7 @@ Describe "arm" -Tags Unit {
             $ValidationResult = Test-AzResourceGroupDeployment -ResourceGroupName $pesterRG -Mode Complete -TemplateFile "$templateFilePath" -TemplateParameterFile "$paramsFilePath" -resourceGroupFromTemplate $pesterRG
             $ValidationResult | Should BeNullOrEmpty
         }
+
     }
 
     AfterAll {
