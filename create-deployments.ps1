@@ -1,27 +1,22 @@
 <#
     Iterates through template and parameter files in the release folder and deploys them
 #>
-Param ( [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]$ReleaseId,
-        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 1)]$RootFolder
-)
+Param ( [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 1)]$ArtifactFolderPath )
 
-# Set-Location $RootFolder
 ls
 
 # Hashtable for storing template and param file pairs
 $deployments = @{}
-
 $paramFiles = @()
 
 # Get .param files
-$currentPath = $MyInvocation.MyCommand.Path
-$currentPath = $currentPath | Split-Path -Parent
-# $releaseFolderPath = $currentPath + "\$ReleaseId\"
-$releaseFolderPath = $currentPath + "\$RootFolder"
-Write-Host "Release folder path: $releaseFolderPath"
+# $currentPath = $MyInvocation.MyCommand.Path
+# $currentPath = $currentPath | Split-Path -Parent
+# $releaseFolderPath = $currentPath + "\$RootFolder"
+Write-Host "Release folder path: $ArtifactFolderPath"
 
 try {
-    $files = Get-ChildItem -Recurse -Path $releaseFolderPath -Filter "*.params.json"
+    $files = Get-ChildItem -Recurse -Path $ArtifactFolderPath -Filter "*.params.json"
     $paramFiles = $files
 }
 catch {
@@ -34,7 +29,7 @@ catch {
 foreach($paramFile in $paramFiles) {
     # find the matching template
     $templateFileName = $paramFile.Name.Replace(".params", "")
-    $templateFile = Get-ChildItem -Recurse -Path $releaseFolderPath -Filter $templateFileName
+    $templateFile = Get-ChildItem -Recurse -Path $ArtifactFolderPath -Filter $templateFileName
     $deployments.Add($paramFile.FullName, $templateFile.FullName)
     $paramFullName = $paramFile.Fullname
     $templFullName = $templateFile.FullName
