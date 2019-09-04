@@ -3,17 +3,9 @@
 #>
 Param ( [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, Position = 1)]$ArtifactFolderPath )
 
-ls
-
 # Hashtable for storing template and param file pairs
 $deployments = @{}
 $paramFiles = @()
-
-# Get .param files
-# $currentPath = $MyInvocation.MyCommand.Path
-# $currentPath = $currentPath | Split-Path -Parent
-# $releaseFolderPath = $currentPath + "\$RootFolder"
-Write-Host "Release folder path: $ArtifactFolderPath"
 
 try {
     $files = Get-ChildItem -Recurse -Path $ArtifactFolderPath -Filter "*.params.json"
@@ -23,7 +15,6 @@ catch {
     Write-Host "No deployment files"
     return
 }
-
 
 # populate the deployment hashtable based on files in the release directory
 foreach($paramFile in $paramFiles) {
