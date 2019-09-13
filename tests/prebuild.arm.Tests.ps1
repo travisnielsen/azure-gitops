@@ -59,15 +59,15 @@ Describe "arm" -Tags Unit {
             # Complete mode - will deploy everything in the template from scratch. If the resource group already contains things (or even items that are not in the template) they will be deleted first.
             # If it passes validation no output is returned, hence we test for NullOrEmpty
             $deploymentError = Test-AzResourceGroupDeployment -ResourceGroupName $pesterRG -Mode Complete -TemplateFile "$templateFilePath" -TemplateParameterFile "$paramsFilePath" -resourceGroupFromTemplate $pesterRG
-            $deploymentError | Should BeNullOrEmpty
 
             if ($deploymentError) {
                 Write-Host $deploymentError.Code
                 Write-Host $deploymentError.Message
                 Write-Host $deploymentError.Details.Code
                 Write-Host $deploymentError.Details.Message
-                
             }
+
+            $deploymentError | Should BeNullOrEmpty
         }
     }
 
