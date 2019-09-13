@@ -66,6 +66,7 @@ Describe "arm" -Tags Unit {
                 Write-Host $deploymentError.Message
                 Write-Host $deploymentError.Details.Code
                 Write-Host $deploymentError.Details.Message
+                
             }
         }
     }
