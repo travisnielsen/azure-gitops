@@ -62,10 +62,10 @@ Describe "arm" -Tags Unit {
             $deploymentError | Should BeNullOrEmpty
 
             if ($deploymentError) {
-                Write-Error $deploymentError.Code
-                Write-Error $deploymentError.Message
-                Write-Error $deploymentError.Details.Code
-                Write-Error $deploymentError.Details.Message
+                Write-Host $deploymentError.Code
+                Write-Host $deploymentError.Message
+                Write-Host $deploymentError.Details.Code
+                Write-Host $deploymentError.Details.Message
             }
         }
     }
