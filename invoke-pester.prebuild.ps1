@@ -132,7 +132,7 @@ foreach ($item in $paramTemplatePaths.GetEnumerator()) {
     
     # TODO: Selective action based on error type (warning, etc...). Send emails
     if ($result.failedCount -ne 0) { 
-         Write-Error "Pester returned errors"
+         Write-Host "Pester returned errors"
     }
     else {
         Move-Templates $item.Key $item.Value
